@@ -45,15 +45,23 @@ const swaggerOptions = {
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerOptions));
 
-app.get('/somar', (req, res) => {
-    const numero1 = parseFloat(req.query.a)
-    const numero2 = parseFloat(req.query.b)
+app.get('/', (req, res) => {
+    res.send('Bem-vindo à API da Calculadora! Acesse a documentação em /docs');
+    res.json({ status: 'API da Calculadora está funcionando!' });
+})
+
+app.post('/somar', (req, res) => {
+
+    const { a, b } = req.body;
+
+    const numero1 = parseFloat(a)
+    const numero2 = parseFloat(b)
 
     if(isNaN(numero1) || isNaN(numero2)) {
         return res.status(400).json({ error: 'Parâmetros inválidos. Certifique-se de fornecer dois números.' });
     }
 
-    res.json({
+    return res.json({
         operacao : "soma",
         a : numero1,
         b : numero2,
@@ -61,10 +69,13 @@ app.get('/somar', (req, res) => {
     })
 })
 
-app.listen(3000, () => {
-    console.log('Servidor  da calculadora rodando na porta 3000');
-    console.log('Acesse a documentação da API em http://localhost:3000/docs');
-})
+if(process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+        console.log(`Servidor rodando na porta ${PORT}`);
+    })
+}
+
 
 
 module.exports = app;

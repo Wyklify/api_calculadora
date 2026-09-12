@@ -6,7 +6,7 @@ async function somar() {
 
     const divResultado = document.getElementById('resultado');
 
-    if(a === '' || b === '') {
+    if (a === '' || b === '') {
         divResultado.innerHTML = 'Por favor, preencha ambos os números.';
         divResultado.style.color = 'red';
         return;
@@ -16,11 +16,22 @@ async function somar() {
     divResultado.style.color = 'black';
 
     try {
-        const resposta = await fetch(`${API_URL}/somar?a=${a}&b=${b}`);
+        const resposta = await fetch(`${API_URL}/somar`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                a: Number(a),
+                b: Number(b)
+            })
+        });
+
+        
         const dados = await resposta.json();
 
         if (resposta.ok) {
-            divResultado.innerHTML = `Resultado da Soma: ${dados.resultado}`;
+            divResultado.innerHTML = `${dados.a} + ${dados.b} = ${dados.resultado}`;
             divResultado.style.color = 'green';
         } else {
             divResultado.innerHTML = `Erro: ${dados.error}`;
