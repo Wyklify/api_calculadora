@@ -30,7 +30,16 @@ const swaggerDocument = {
     }
 }
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// Opções para carregar o visual do Swagger via CDN na Vercel
+const swaggerOptions = {
+    customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css',
+    customJs: [
+        'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.js'
+    ]
+};
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerOptions));
 
 app.get('/somar', (req, res) => {
     const numero1 = parseFloat(req.query.a)
